@@ -154,7 +154,7 @@ for bn = 1:nbones
         end
     end
     if frs(end) > end_fr
-        if frs(end) == length(Tauto(:,1))
+        if frs(end)+2 >= length(Tauto(:,1))
             end_fr = frs(end);
         else
             end_fr = frs(end)+2;
