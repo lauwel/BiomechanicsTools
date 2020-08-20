@@ -2,8 +2,11 @@
 
 % Written by L. Welte
 
-% Updated: August 19/2020
+% Updated: August 20/2020
 % Most recent update fixed some minor indexing issues.
+% Modified so that you can use bone transforms OR autoscoper
+% Renamed the function to show that the bones used are foot related.
+
 
 clear
 clc
@@ -27,13 +30,13 @@ end
 trialDir = fullfile(trialDir,filesep);
 
 % choose transforms or autoscoper:
-tran_flag = questdlg('Would you like to load autoscoper .tra files, or bone transform files (.mat)?','Choose file type','Autoscoper','BoneTransform','None','Autoscoper');
+tran_flag = questdlg('Would you like to load autoscoper .tra files, or bone transform files (.mat)?','Choose file type','Autoscoper','BoneTransforms','None','Autoscoper');
 if strcmp(tran_flag,'None')
     return
 end
 
 
-if strcmp(tran_flag,'BoneTransform')
+if strcmp(tran_flag,'BoneTransforms')
     [btfile,btDir] = uigetfile([trialDir '\BoneTransforms\'],'Select BONE TRANSFORM file');
     if btDir == 0
         return
@@ -124,10 +127,13 @@ for bn = 1:nbones
     
     % load the .tra files
     
-    if contains(tran_flag,'BoneTransform')
+    if contains(tran_flag,'BoneTransforms')
         Tanim.(bonesCell{bn}) = T.(bonesCell{bn});
         nanind = isnan(Tanim.(bonesCell{bn}));
         Tanim.(bonesCell{bn})(nanind) = 1;
+        % to keep consistent with non bone transform option
+        Tauto = convertRotation(Tanim.(bonesCell{bn}),'4x4xn','autoscoper');
+        nanind = isnan(Tauto);
     else
         Tauto = dlmread(fullfile(traDir,traFilesCell{bn}));
         nanind = isnan(Tauto);
@@ -135,15 +141,24 @@ for bn = 1:nbones
         Tanim.(bonesCell{bn}) = convertRotation(Tauto,'autoscoper','4x4xn');
     end
     % find where there's data in the autoscoped .tra file
-    
-    frs = find(nanind(:,1)==0);
+
+    frs = find(nanind(:,1)~=0 |  diff(Tauto([1:end,end],1)) ~= 0);   % the interp option sets all the transforms to be the same;
     % set the first and last frame to be as wide as the bone with the most
-    % tracked data
+    % tracked data -> add an extra frame on either side (the end needs 2
+    % because of the diff function)
     if frs(1) < first_fr
-        first_fr = frs(1);
+        if frs(1) ~= 1
+            first_fr = frs(1)-1;
+        else
+            first_fr = 1;
+        end
     end
     if frs(end) > end_fr
-        end_fr = frs(end);
+        if frs(end) == length(Tauto(:,1))
+            end_fr = frs(end);
+        else
+            end_fr = frs(end)+2;
+        end
     end
     
     
@@ -203,16 +218,17 @@ fclose(fid);
 fprintf('Animation created successfully in %s \n', filename)
 
 %% write the bone transform file
-
-boneT_dir = fullfile(trialDir,'BoneTransform',filesep);
-if exist(boneT_dir,'dir') == 0
-    mkdir(boneT_dir);
+if ~strcmp(tran_flag,'BoneTransforms')
+    boneT_dir = fullfile(trialDir,'BoneTransforms',filesep);
+    if exist(boneT_dir,'dir') == 0
+        mkdir(boneT_dir);
+    end
+    
+    % save the transforms in a nice MAT file
+    T = Tanim;
+    boneTfile = fullfile(boneT_dir,[trialName '_transforms.mat']);
+    save(boneTfile,'T')
+    
+    
+    fprintf('Bone transform file created successfully in %s \n', boneTfile)
 end
-
-% save the transforms in a nice MAT file
-T = Tanim;
-boneTfile = fullfile(boneT_dir,[trialName '_transforms.mat']);
-save(boneTfile,'T')
-
-
-fprintf('Bone transform file created successfully in %s \n', boneTfile)
