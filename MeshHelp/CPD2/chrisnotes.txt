@@ -1,0 +1,15 @@
+set up to build with cmake because gcc version not compatible with matlab mex compiler
+
+fgt_predict.c: line 184
+change const int to const mwSize to fix assignment from incompatible pointer type error
+
+fgt_model.c: line 206
+change const int to const mwSize to fix assignment from incompatible pointer type error
+
+installation using cmake in terminal (ROOTDIR is the CPD2 folder):
+
+cd ROOTDIR
+mkdir build
+cd build
+cmake ..
+make
