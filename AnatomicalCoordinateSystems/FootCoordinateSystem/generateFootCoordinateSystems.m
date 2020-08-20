@@ -47,9 +47,9 @@ end
 % load the template foot
 
 file = 'TEMPLATEbonestruct.mat';
-path = 'C:\Users\Lauren\Documents\git\BiomechanicsTools\CoordinateSystems\Foot\References\';
+% path = 'C:\Users\Lauren\Documents\git\BiomechanicsTools\CoordinateSystems\Foot\References\';
 % [file,path] = uiputfile('*.mat','Select a file',[ivDir, 'TEMPLATEbonestruct.mat']);
-b = load(fullfile(path,file)); % loads the bonestruct of the template file;
+b = load(fullfile(file)); % loads the bonestruct of the template file;
 
 tpltBoneStruct = b.bonestruct;
 
