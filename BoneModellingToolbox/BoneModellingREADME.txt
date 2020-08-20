@@ -1,0 +1,1 @@
+This toolbox is for all functions related to the bone models. Everything that comes out of Mimics- so converting from vrml to iv, partial volumes, code for reading and doing that is all contained here. There are ONLY functions, no scripts calling the functions.
