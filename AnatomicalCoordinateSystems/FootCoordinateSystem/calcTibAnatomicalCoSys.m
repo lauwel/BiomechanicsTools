@@ -18,7 +18,7 @@ fprintf('Calculating the tibia axes from the shape....\n')
 ptsNew.Raw = Tib_pts;
 
 % reference files
-refDir = 'E:\Co-ordinateSystems\TibRef\';
+refDir = '';%E:\Co-ordinateSystems\TibRef\';
 tib.Ref = fullfile(refDir, 'tibRef.iv');
 tib.Dome = fullfile(refDir, 'tibDome.iv');
 tib.Cyl = fullfile(refDir, 'tibCyl.iv');

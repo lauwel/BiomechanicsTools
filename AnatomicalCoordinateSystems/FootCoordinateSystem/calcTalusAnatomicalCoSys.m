@@ -19,11 +19,11 @@ fprintf('Calculating the subtalar and the talocrural axes....\n')
 ptsNew.Raw = Talpts;
 
 % reference files
-refDir = 'E:\Co-ordinateSystems\TalusRef\';
-tal.Ref = fullfile(refDir, 'refTalus.iv');
-tal.Dome = fullfile(refDir, 'talarDome.iv');
-tal.Calc = fullfile(refDir, 'calcSurf.iv');
-tal.Nav = fullfile(refDir, 'navSurf.iv');
+% refDir = 'E:\Co-ordinateSystems\TalusRef\';
+tal.Ref = fullfile('refTalus.iv');
+tal.Dome = fullfile('talarDome.iv');
+tal.Calc = fullfile('calcSurf.iv');
+tal.Nav = fullfile('navSurf.iv');
 
 surf_names = fields(tal); % get the list of the surfaces we are referencing
 nsurf = length(surf_names);
