@@ -142,7 +142,7 @@ for bn = 1:nbones
     end
     % find where there's data in the autoscoped .tra file
 
-    frs = find(nanind(:,1)~=0 |  diff(Tauto([1:end,end],1)) ~= 0);   % the interp option sets all the transforms to be the same;
+    frs = find(nanind(:,1)==0 &  diff(Tauto([1:end,end],1)) ~= 0);   % the interp option sets all the transforms to be the same;
     % set the first and last frame to be as wide as the bone with the most
     % tracked data -> add an extra frame on either side (the end needs 2
     % because of the diff function)
