@@ -2,7 +2,8 @@ function varargout  = vectorCodingGraphs(xData,phaseData,numDivs,varargin)
 % vectorCodingGraphs(xData,phaseData,numDivs)
 % h = vectorCodingGraphs(xData,phaseData,numDivs)
 % h = vectorCodingGraphs(xData,phaseData,numDivs,optCol,xName, yName)
-
+% Written by L. Welte 2019.
+% Code for plotting the vector coding results.
 % xData     = the x co-ordinates for corresponding phase data
 % phaseData = the raw array of vector coding data -> -180 to 180
 % numDivs = the number of divisions of the phase circle, default 4 (90 deg)- are
