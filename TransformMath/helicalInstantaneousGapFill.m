@@ -11,6 +11,9 @@ sn = nan(3,nfr);
 ss = nan(3,nfr);
 
 ind = Inonan(1:spc:end);
+if spc == nfr
+    error('Frame gap is too large in helicalInstantaneousGapFill')
+end
 ind_rep =  floor(ind(1)+spc/2:spc:ind(end)-spc/2);
 % ind_int = 1+spc/2:nfr+spc/2;
 [sphi(ind_rep),sn(:,ind_rep),sL(ind_rep),ss(:,ind_rep)] = helicalInstantaneous(TR(:,:,ind),T(:,:,ind));
