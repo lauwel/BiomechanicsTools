@@ -11,8 +11,9 @@ function [mean_data,std_data] = makeStatsDotPlot(group,data,names,cols,marker)
 %  marker   = marker type on the plot i.e. 'o' or 'x' or '.' etc
 groupnums = sort(unique(group));
 ngroups = length(groupnums);
-figure; ha = axes; hold on;
-
+% figure; 
+% ha = axes; hold on;
+ha = gca; hold on;
 if exist('cols','var')
     c = cols;
 else
@@ -21,7 +22,7 @@ end
 if ~exist('marker','var')
     marker = 'o';
 end
-plot([-0.5,ngroups+0.5],[0 0],'k--')
+plot([-0.5,ngroups+0.5],[0 0],'k:')
 for i = 1:ngroups
     ind{i} = group == groupnums(i);
     for dp = 1:size(data,2) % for each data point
@@ -29,7 +30,7 @@ for i = 1:ngroups
 %         scatter(group(ind{i}), data(ind{i},dp),'markerfacecolor','none','markeredgecolor',c(i,:),'Marker',marker)
 %         else
 %                 data(ind{i},dp)
-scatter(group(ind{i}), data(ind{i},dp),'markerfacecolor',c(i,:),'markeredgecolor',c(i,:),'Marker',marker)
+        scatter3(group(ind{i}), data(ind{i},dp),repmat(0.1,length(group(ind{i})),1),'markerfacecolor',c(i,:),'markeredgecolor',c(i,:),'Marker',marker)
 %         end
     end
     mean_data(i) = nanmean(data(ind{i},:));

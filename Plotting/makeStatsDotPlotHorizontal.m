@@ -1,4 +1,4 @@
-function [mean_data,std_data] = makeStatsDotPlot(group,data,names,cols,marker)
+function [mean_data,std_data] = makeStatsDotPlotHorizontal(group,data,names,cols,marker)
 
 % make a dot plot with the data on the graph
 % shows the mean and the standard deviation for each group
@@ -11,8 +11,8 @@ function [mean_data,std_data] = makeStatsDotPlot(group,data,names,cols,marker)
 %  marker   = marker type on the plot i.e. 'o' or 'x' or '.' etc
 groupnums = sort(unique(group));
 ngroups = length(groupnums);
-figure; ha = axes; hold on;
-
+% figure; ha = axes; hold on;
+ha = gca; hold on;
 if exist('cols','var')
     c = cols;
 else
