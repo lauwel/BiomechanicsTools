@@ -21,7 +21,7 @@ function final_sig = adaptiveLowPassButterworth(X,w,Fs,pflag)
 % colours to indicate how the data was divided. 
 
 
-poles = 2;
+poles = 4;
 X_orig = X;
 maxIter = 1;
 for iter = 1:maxIter
