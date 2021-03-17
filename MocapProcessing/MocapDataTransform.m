@@ -133,6 +133,7 @@ for i = 1:nfiles
     disp((root{1}));
     
     unit_conv = 0; % set the unit conversion flag to 0
+    unit_chk = 0; % only check the units once;
     if isfield(raw_qtm_export.(root{1}).Trajectories.Labeled,'Labels')
         for j = 1:size(raw_qtm_export.(root{1}).Trajectories.Labeled.Labels,2)
             
@@ -148,11 +149,17 @@ for i = 1:nfiles
             marker_data.FrameRate = raw_qtm_export.(root{1}).FrameRate;
             
             m_temp = squeeze((raw_qtm_export.(root{1}).Trajectories.Labeled.Data(j,1:3,:)));
-            if unit_conv~=1;
-                if sum(sum(m_temp > 10)) > 0.25*(marker_data.nFrames*3) % if 25% or more of the values are larger than 10, assume its in millimeters and divide by 1000
-                    unit_conv = 1;
-                    warning('Converting marker units to meters for %s.',root{1})
+            
+            nframesTracked = sum(~isnan(m_temp(1,:))); % determine the number of frames with tracked data
+            if unit_chk == 0 && nframesTracked > 10 % only check once, but make sure there are enough frames to check
+                unit_chk = 1;
+                if unit_conv~=1
+                    if sum(max(abs(m_temp)) > 10) > 0.1*(nframesTracked) % if 10% or more of the tracked values are larger than 10, assume its in millimeters and divide by 1000
+                        unit_conv = 1;
+                        warning('Converting marker units to meters for %s.',root{1})
+                    end
                 end
+                
             end
             
             if unit_conv == 1 % convert to meters
