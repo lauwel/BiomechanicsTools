@@ -12,10 +12,11 @@ function [new_pts,new_cns] = rewriteCns(orig_pts,orig_cns,ind_subset)
 % orig_cns = [ 1 2 3; 1 3 4; 1 4 5; 3 4 6; 2 3 7; 3 6 7; 6 7 8];
 % ind_subset = [1 2 4 5 6 7 8]';
 % ind_subset = sort(ind_subset);
-figure; patch('faces',orig_cns,'vertices',orig_pts,'facealpha',0.2);
+% figure; patch('faces',orig_cns,'vertices',orig_pts,'facealpha',0.2);
 % first, remove the rows of connections with unreferenced points
 new_cns = [];
 npts_orig = size(orig_pts,1);
+ind_subset = sort(ind_subset);
 pts_RM = setdiff(1:npts_orig,ind_subset);%find the unref points
 
 cnt = 1;
@@ -29,7 +30,7 @@ for c = 1:length(orig_cns)
 end
 
 
-figure; patch('faces',new_cns,'vertices',orig_pts,'facealpha',0.2);
+% figure; patch('faces',new_cns,'vertices',orig_pts,'facealpha',0.2);
 
 new_pts = orig_pts(ind_subset,:);
 
@@ -44,5 +45,5 @@ for p = 1:npts_new
 end
 
 [new_pts,new_cns] = removeUnrefPts(new_pts,new_cns);
-figure; patch('faces',new_cns,'vertices',new_pts,'facealpha',0.2);
+% figure; patch('faces',new_cns,'vertices',new_pts,'facealpha',0.2);
 end
