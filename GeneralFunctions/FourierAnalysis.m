@@ -32,3 +32,8 @@ for ii = 1: length(P1)
 end
 yyaxis right; hold on; plot(f,P1_cum/sumP1);
 ylabel('% of cumulative signal content')
+
+i60 = find(P1_cum/sumP1 > 0.6,1);
+i80 = find(P1_cum/sumP1 > 0.8,1);
+i90 = find(P1_cum/sumP1 > 0.9,1);
+fprintf('60%% of signal is captured at %0.0f Hz, 80%% of signal is captured at %0.0f Hz, 90%% of the signal is captured at %0.0f Hz \n',f(i60),f(i80),f(i90)  )
