@@ -67,7 +67,7 @@ nbones = length(bone_list);
 % bonesCell = [];
 tic
 for b = 1:nbones
-    file_spl = strsplit(bone_list{b},'_');
+    file_spl = strsplit(bone_list{b}(1:end-3),'_');
     boneout = 0; st = 0;
     while boneout == 0 && st < length(file_spl) % while the bone hasn't been found, or the # of split parts of the file is exceeded
         st = st + 1;
