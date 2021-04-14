@@ -99,9 +99,13 @@ switch intype
         nfr = size(inData,1);
         T = zeros(4,4,nfr);
         for i = 1:nfr
-            q = quaternion(inData(i,1:4));
-            T(1:4,1:4,i) = q.t;
-            T(1:3,4,i) = inData(i,5:7);
+            if any(isnan(inData(i,:)))
+                T(:,:,i) = nan(4,4);
+            else
+                R = quat2rotm(inData(i,1:4));
+                T(1:3,1:3,i) = R;
+                T(1:3,4,i) = inData(i,5:7);
+            end
         end
     case 'helical'
         error('Helical axis is not a currently supported intype.')
@@ -143,8 +147,12 @@ switch outtype
         outData = T;
     case 'quaternion'
         for i = 1:nfr
-            outData(i,1:4) = double(quaternion(T(1:4,1:4,i)));
-            outData(i,5:7) = T(1:3,4,i);
+            if any(isnan(T(:,:,i)))
+                outData(i,:) = nan(1,7);
+            else
+                outData(i,1:4) = rotm2quat(T(1:3,1:3,i));
+                outData(i,5:7) = T(1:3,4,i);
+            end
         end
     case 'helical'
         for i = 1:nfr
