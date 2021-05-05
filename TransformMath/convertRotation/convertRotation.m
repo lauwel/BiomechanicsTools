@@ -151,6 +151,7 @@ switch outtype
                 outData(i,:) = nan(1,7);
             else
                 outData(i,1:4) = rotm2quat(T(1:3,1:3,i));
+                outData(i,1:4) = unit(outData(i,1:4));
                 outData(i,5:7) = T(1:3,4,i);
             end
         end
