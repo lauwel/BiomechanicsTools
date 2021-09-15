@@ -64,7 +64,14 @@ if ischar(bone_list)
     clearvars('bone_list');
     bone_list{1} = bl_temp;
 end
-   
+top_text = sprintf('Would you like to fix the animation\n relative to one bone?');
+bone_fix = chooseDialog(top_text,bone_list); %call the choose dialog with the bones
+
+if isempty(bone_fix) % find the index in the bone list to be able to assess if it needs to be fixed relative to that bone later 
+    bone_index = 0;
+else
+    bone_index = find(contains(bone_list,bone_fix));
+end
 %% get the files to animate
 
 tr_loc = strsplit(trialDir,filesep);
@@ -128,11 +135,13 @@ for bn = 1:nbones
     % load the .tra files
     
     if contains(tran_flag,'BoneTransforms')
+       
+        % bone transform for selected bone
         Tanim.(bonesCell{bn}) = T.(bonesCell{bn});
-        nanind = isnan(Tanim.(bonesCell{bn}));
+        nanind = isnan(T.(bonesCell{bn}));
         Tanim.(bonesCell{bn})(nanind) = 1;
         % to keep consistent with non bone transform option
-        Tauto = convertRotation(Tanim.(bonesCell{bn}),'4x4xn','autoscoper');
+        Tauto = convertRotation(T.(bonesCell{bn}),'4x4xn','autoscoper');
         nanind = isnan(Tauto);
     else
         Tauto = dlmread(fullfile(traDir,traFilesCell{bn}));
@@ -140,9 +149,13 @@ for bn = 1:nbones
         Tauto(nanind) = 1;
         Tanim.(bonesCell{bn}) = convertRotation(Tauto,'autoscoper','4x4xn');
     end
+    
+    
     % find where there's data in the autoscoped .tra file
-
     frs = find(nanind(:,1)==0 &  diff(Tauto([1:end,end],1)) ~= 0);   % the interp option sets all the transforms to be the same;
+   
+   
+    nan_ind_save{bn} = find(~nanind(:,1));
     % set the first and last frame to be as wide as the bone with the most
     % tracked data -> add an extra frame on either side (the end needs 2
     % because of the diff function)
@@ -176,6 +189,24 @@ for bn = 1:nbones
     
 end
 
+% fix the transforms - this can't be in the last loop because the bone may
+% not exist in the Tanim matrix yet - could probably modify to change the
+% order of the bones with the fixed one being done first...
+
+nfrs = size(Tanim.(bonesCell{bn}),3);    
+
+if bone_index ~= 0
+    T_fix = Tanim.(bonesCell{bone_index}); 
+    for bn = 1:nbones
+        (bonesCell{bn})
+        for fr = nan_ind_save{bone_index}'
+            % bone transform to fix it to if selected
+            
+          
+            Tanim.(bonesCell{bn})(:,:,fr) = invTranspose(T_fix(:,:,fr))*Tanim.(bonesCell{bn})(:,:,fr);
+        end
+    end
+end
 
 for bn = 1:nbones
     % write the RTp files
@@ -217,7 +248,7 @@ fclose(fid);
 
 fprintf('Animation created successfully in %s \n', filename)
 
-%% write the bone transform file
+% write the bone transform file
 if ~strcmp(tran_flag,'BoneTransforms')
     boneT_dir = fullfile(trialDir,'BoneTransforms',filesep);
     if exist(boneT_dir,'dir') == 0
