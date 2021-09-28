@@ -1,3 +1,6 @@
 [submodule "Animating/createInventorSuite"]
 	path = Animating/createInventorSuite
 	url = https://github.com/skelobslab/createInventorSuite
+[submodule "Tools3D"]
+	path = Tools3D
+	url = https://github.com/skelobslab/Tools3D
