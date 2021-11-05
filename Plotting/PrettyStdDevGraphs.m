@@ -1,9 +1,20 @@
 function varargout = PrettyStdDevGraphs(xdata,meandata,stddev,c,num)
+% Plots the mean with a specified number of standard deviations shaded
+% behind it.
+% --------INPUT VARIABLES------------
+% xdata is the data in x
+% meandata is the same size as the xdata and is plotted as one line
+% stddev is the value of the standard deviation at every point x
 % c is the color
-% takes in vectors
-% plots a graph with transparent standard deviations
+% num is the number of standard deviations to plot, default is 2
+% -----------OUTPUT VARIABLES ------------
+% h = the handle to the graphics object of the shaded area (1) and the mean 
+% line (2)
+% ----------HISTORY------------------
 % Feb 21/2018 - edited to handle nan values being entered
 % h is the handle to 1- the filled area, 2- the mean plot
+% 2016 - Written by L Welte
+% -------------------------------------------
 if nargin < 5
     num = 2; % default number of standard devs
 end
