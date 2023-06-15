@@ -1,4 +1,4 @@
-function varargout = PrettyStdDevGraphs(xdata,meandata,stddev,c,num)
+function varargout = PrettyStdDevGraphs(xdata,meandata,stddev,c,num,hax)
 % Plots the mean with a specified number of standard deviations shaded
 % behind it.
 % --------INPUT VARIABLES------------
@@ -7,16 +7,21 @@ function varargout = PrettyStdDevGraphs(xdata,meandata,stddev,c,num)
 % stddev is the value of the standard deviation at every point x
 % c is the color
 % num is the number of standard deviations to plot, default is 2
+% hax: handle to the axes (optional)
 % -----------OUTPUT VARIABLES ------------
 % h = the handle to the graphics object of the shaded area (1) and the mean 
 % line (2)
 % ----------HISTORY------------------
+% Nov 2022 - edited to add a handle to the axes to plot
 % Feb 21/2018 - edited to handle nan values being entered
 % h is the handle to 1- the filled area, 2- the mean plot
 % 2016 - Written by L Welte
 % -------------------------------------------
 if nargin < 5
     num = 2; % default number of standard devs
+end
+if ~exist("hax","var")
+    hax = gca;
 end
 
 uplim = meandata + num * stddev;
@@ -32,9 +37,9 @@ lowlim = fliplr(lowlim);
 
 low_nan = ~isnan(lowlim);
 
-h(1) = fill([xdata(up_nan),fliplr(flipud(xdata(low_1_nan)))],[uplim(up_nan), lowlim(low_nan)],c); %draw a rectangle defined by these borders
+h(1) = fill(hax,[xdata(up_nan),fliplr(flipud(xdata(low_1_nan)))],[uplim(up_nan), lowlim(low_nan)],c); %draw a rectangle defined by these borders
 hold on
-h(2) = plot(xdata,meandata,'LineWidth',2);
+h(2) = plot(hax,xdata,meandata,'LineWidth',2);
 
 set(h(1),'FaceAlpha',0.3,'LineStyle','none')
 set(get(get(h(1),'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
